@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import MainLayout from './components/shared/MainLayout';
+import Routes from './config/routes';
+
+import 'semantic-ui-css/semantic.min.css'
 import './App.css';
 
-function App() {
+const App = () => {
+  const [currentUser, setCurrentUser] = useState({
+    isLoggedIn: localStorage.getItem('token') && true,
+    token: localStorage.getItem('token'),
+  });
+
+  const handleLogin = (token) => {
+    localStorage.setItem('token', token);
+    setCurrentUser({isLoggedIn: true, token});
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setCurrentUser({isLoggedIn: false, token: null});
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MainLayout currentUser={currentUser} logout={handleLogout}>
+      <Routes
+        currentUser={currentUser}
+        handleLogin={handleLogin}
+      />
+    </MainLayout>
   );
-}
+};
 
 export default App;
