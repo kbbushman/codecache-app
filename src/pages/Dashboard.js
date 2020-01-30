@@ -9,7 +9,7 @@ import {
   Divider,
 } from 'semantic-ui-react';
 
-const DashboardContainer = () => {
+const DashBoard = () => {
   const [query, setQuery] = useState('');
   const [fetchedCategories, setFetchedCategories] = useState([
     {_id: 1, name: 'Bash', snippets: [
@@ -17,21 +17,21 @@ const DashboardContainer = () => {
       {_id: 23, title: 'Set Home Path', body: 'This is the body', slug: 'set-home-path'},
       {_id: 24, title: 'Grep', body: 'This is the body', slug: 'grep'},
       {_id: 25, title: 'Kill', body: 'This is the body', slug: 'kill'},
-    ]},
+    ], slug: 'bash'},
     {_id: 2, name: 'JavaScript', snippets: [
       {_id: 26, title: 'ES6', body: 'This is the body', slug: 'es6'},
       {_id: 27, title: 'Promises', body: 'This is the body', slug: 'promises'},
       {_id: 28, title: 'Fetch', body: 'This is the body', slug: 'fetch'},
       {_id: 29, title: 'Babel', body: 'This is the body', slug: 'babel'},
       {_id: 299, title: 'Grep', body: 'This is the body', slug: 'grep'},
-    ]},
+    ], slug: 'javascript'},
     {_id: 3, name: 'Vim', snippets: [
       {_id: 30, title: 'HOW TO QUIT!!!', body: 'This is the body', slug: 'how-to-quit'},
-    ]},
+    ], slug: 'vim'},
     {_id: 4, name: 'Python', snippets: [
       {_id: 31, title: 'Python', body: 'This is the body', slug: 'python'},
       {_id: 32, title: 'Django', body: 'This is the body', slug: 'djnago'},
-    ]},
+    ], slug: 'python'},
     {_id: 5, name: 'React', snippets: [
       {_id: 33, title: 'Containers & Components', body: 'This is the body', slug: 'containers-components'},
       {_id: 34, title: 'Redux', body: 'This is the body', slug: 'redux'},
@@ -39,7 +39,7 @@ const DashboardContainer = () => {
       {_id: 36, title: 'State & Props', body: 'This is the body', slug: 'state-props'},
       {_id: 37, title: 'React Router DOM v4', body: 'This is the body', slug: 'react-router-dom-v4'},
       {_id: 38, title: 'React Hooks', body: 'This is the body', slug: 'react-hooks'},
-    ]},
+    ], slug: 'react'},
   ]);
 
   const [categories, setCategories] = useState([...fetchedCategories]);
@@ -91,7 +91,9 @@ const DashboardContainer = () => {
   const showSnippets = (category) => (
     category.snippets.map((snippet) => (
       <Grid.Column key={snippet._id}>
-        <Link style={{fontSize: '1.2em'}} to={`/${category.slug}/${snippet.slug}`}>{snippet.title}</Link>
+        <Link to={`/categories/${category.slug}/${snippet.slug}`} style={{fontSize: '1.2em'}} >
+          {snippet.title}
+        </Link>
       </Grid.Column>
     ))
   );
@@ -118,4 +120,4 @@ const DashboardContainer = () => {
   )
 };
 
-export default DashboardContainer;
+export default DashBoard;
