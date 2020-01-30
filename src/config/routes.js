@@ -3,7 +3,8 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import HomePage from '../pages/Home';
 import Register from '../pages/Register';
 import Login from '../pages/Login';
-import DashboardContainer from '../pages/Dashboard';
+import Dashboard from '../pages/Dashboard';
+import Snippet from '../pages/Snippet';
 
 
 export default ({ currentUser, handleLogin }) => (
@@ -12,7 +13,10 @@ export default ({ currentUser, handleLogin }) => (
     <Route path='/register' component={Register} />
     <Route path='/login' render={() => <Login handleLogin={handleLogin} />} />
     <Route path='/dashboard' render={() => 
-      currentUser.isLoggedIn ? <DashboardContainer /> : <Redirect to='/login' />
+      currentUser.isLoggedIn ? <Dashboard /> : <Redirect to='/login' />
+    } />
+    <Route path={'/categories/:category/:snippet'} render={() => 
+      currentUser.isLoggedIn ? <Snippet /> : <Redirect to='/login' />
     } />
   </Switch>
 );
