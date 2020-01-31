@@ -1,0 +1,163 @@
+[
+  {
+    "_id": 1,
+    "name": "Bash",
+    "slug": "bash",
+    "snippets": [
+      {
+        "_id": 22,
+        "title": "Aliases",
+        "body": "This is the body",
+        "slug": "aliases",
+        "language": "bash"
+      },
+      {
+        "_id": 23,
+        "title": "Set Home Path",
+        "body": "This is the body",
+        "slug": "set-home-path",
+        "language": "bash"
+      },
+      {
+        "_id": 24,
+        "title": "Grep",
+        "body": "This is the body",
+        "slug": "grep",
+        "language": "bash"
+      },
+      {
+        "_id": 25,
+        "title": "Kill",
+        "body": "This is the body",
+        "slug": "kill",
+        "language": "bash"
+      }
+    ]
+  },
+  {
+    "_id": 2,
+    "name": "JavaScript",
+    "slug": "javascript",
+    "snippets": [
+      {
+        "_id": 26,
+        "title": "ES6",
+        "body": "This is the body",
+        "slug": "es6",
+        "language": "javascript"
+      },
+      {
+        "_id": 27,
+        "title": "Promises",
+        "body": "This is the body",
+        "slug": "promises",
+        "language": "javascript"
+      },
+      {
+        "_id": 28,
+        "title": "Fetch",
+        "body": "This is the body",
+        "slug": "fetch",
+        "language": "javascript"
+      },
+      {
+        "_id": 29,
+        "title": "Babel",
+        "body": "This is the body",
+        "slug": "babel",
+        "language": "javascript"
+      },
+      {
+        "_id": 299,
+        "title": "Grep",
+        "body": "This is the body",
+        "slug": "grep",
+        "language": "javascript"
+      }
+    ]
+  },
+  {
+    "_id": 3,
+    "name": "Vim",
+    "slug": "vim",
+    "snippets": [
+      {
+        "_id": 30,
+        "title": "HOW TO QUIT!!!",
+        "body": "This is the body",
+        "slug": "how-to-quit",
+        "language": "vim"
+      }
+    ]
+  },
+  {
+    "_id": 4,
+    "name": "Python",
+    "slug": "python",
+    "snippets": [
+      {
+        "_id": 31,
+        "title": "Python",
+        "body": "This is the body",
+        "slug": "python",
+        "language": "python"
+      },
+      {
+        "_id": 32,
+        "title": "Django",
+        "body": "This is the body",
+        "slug": "djnago",
+        "language": "python"
+      }
+    ]
+  },
+  {
+    "_id": 5,
+    "name": "React",
+    "slug": "react",
+    "snippets": [
+      {
+        "_id": 33,
+        "title": "Containers & Components",
+        "body": "class App extends component {\n  state = {\n users: [],\n}\n}",
+        "slug": "containers-components",
+        "language": "jsx"
+      },
+      {
+        "_id": 34,
+        "title": "Redux",
+        "body": "This is the body",
+        "slug": "redux",
+        "language": "jsx"
+      },
+      {
+        "_id": 35,
+        "title": "Formik",
+        "body": "This is the body",
+        "slug": "formik",
+        "language": "jsx"
+      },
+      {
+        "_id": 36,
+        "title": "State & Props",
+        "body": "This is the body",
+        "slug": "state-props",
+        "language": "jsx"
+      },
+      {
+        "_id": 37,
+        "title": "React Router DOM v4",
+        "body": "This is the body",
+        "slug": "react-router-dom-v4",
+        "language": "jsx"
+      },
+      {
+        "_id": 38,
+        "title": "React Hooks",
+        "body": "This is the body",
+        "slug": "react-hooks",
+        "language": "jsx"
+      }
+    ]
+  }
+]
