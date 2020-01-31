@@ -16,3 +16,8 @@ p > span {
   opacity: 0.4;
   text-align: center;
 }
+
+textarea:focus {
+  border: none !important;
+  outline: none !important;
+}
