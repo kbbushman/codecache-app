@@ -30,12 +30,12 @@ const Navbar = ({ currentUser, logout }) => {
                 Logout
               </Button> */}
               <Link to='/dashboard'>
-                <Icon name='home' color='blue' style={{fontSize: 25, marginRight: '.5em', cursor: 'pointer'}} />
+                <Icon name='home' color='blue' style={{fontSize: 22, marginRight: '.5em', cursor: 'pointer'}} />
               </Link>
               <Link to='/new-snippet'>
-                <Icon name='plus' color='blue' style={{fontSize: 25, marginRight: '.5em', cursor: 'pointer'}} />
+                <Icon name='plus' color='blue' style={{fontSize: 22, marginRight: '.5em', cursor: 'pointer'}} />
               </Link>
-              <Icon name='sign-out' color='blue' onClick={logout} style={{fontSize: 25, cursor: 'pointer'}} />
+              <Icon name='sign-out' color='blue' onClick={logout} style={{fontSize: 22, cursor: 'pointer'}} />
             </Menu.Item>
           )}
           {!currentUser.isLoggedIn && (
