@@ -7,6 +7,7 @@ import {
   Form,
   Input,
   Divider,
+  Icon,
 } from 'semantic-ui-react';
 
 // TEMP DATA: REMOVE
@@ -51,11 +52,10 @@ const DashBoard = () => {
       <Grid.Column style={{maxWidth: 780}}>
         <Form size='huge' style={{marginTop: 60}}>
           <Form.Field>
-            <Input
-              icon='search'
-              placeholder='Search...'
-              value={query}
-              onChange={handleChange} />
+            <Input icon placeholder='Search...' value={query} onChange={handleChange}>
+              <input style={{background: 'hsla(360, 100% , 100%, .15)', color: 'whitesmoke'}} />
+              <Icon inverted name='search' />
+            </Input>
           </Form.Field>
         </Form>
       </Grid.Column>
