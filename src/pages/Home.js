@@ -26,8 +26,9 @@ const Home = () => {
       content='Save code, save time'
       inverted
       style={{
-        fontSize: '1.7em',
+        fontSize: '1.5em',
         fontWeight: 'normal',
+        letterSpacing: '1.5px',
         marginTop: '.5em',
         marginBottom: '1.5em'
       }}
