@@ -5,6 +5,7 @@ import Register from '../pages/Register';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import Snippet from '../pages/Snippet';
+import NewSnippet from '../pages/NewSnippet';
 
 
 export default ({ currentUser, handleLogin }) => (
@@ -14,6 +15,9 @@ export default ({ currentUser, handleLogin }) => (
     <Route path='/login' render={() => <Login handleLogin={handleLogin} />} />
     <Route path='/dashboard' render={() => 
       currentUser.isLoggedIn ? <Dashboard /> : <Redirect to='/login' />
+    } />
+    <Route path='/new-snippet' render={() => 
+      currentUser.isLoggedIn ? <NewSnippet /> : <Redirect to='/login' />
     } />
     <Route path={'/categories/:category/:snippet'} render={() => 
       currentUser.isLoggedIn ? <Snippet /> : <Redirect to='/login' />
