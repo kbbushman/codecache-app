@@ -7,6 +7,7 @@ import {
   Grid,
   Header,
   Button,
+  Icon,
 } from 'semantic-ui-react';
 
 // import "prismjs/themes/prism-twilight.css";
@@ -64,7 +65,7 @@ const Snippet = ({ match }) => {
       <Grid centered columns={1} padded stackable>
         <Grid.Column style={{maxWidth: 780}}>
           <Header as='h1' style={{color: '#fbbd08', marginBottom: 20}}>
-            {match.params.snippet.toUpperCase()}
+            {match.params.snippet.toUpperCase()} {!isReadOnly && <Icon name='edit' style={{fontSize: 20, position: 'relative', left: 10, bottom: 10}} />}
           </Header>
           <Editor
             value={snippet.body}
@@ -75,7 +76,7 @@ const Snippet = ({ match }) => {
               // fontFamily: '"Fira code", "Fira Mono", monospace',
               fontFamily: 'monospace',
               fontSize: 15,
-              border: '2px solid hsla(360, 100% , 100%, .15)',
+              border: isReadOnly ? '2px solid hsla(360, 100% , 100%, .15)' : '2px solid #2185d0',
               backgroundColor: 'hsla(360, 100% , 100%, .05)',
               color: 'lightblue',
             }}
