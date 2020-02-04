@@ -36,10 +36,10 @@ const NewSnippet = ({ history }) => {
   const showSaveButton = () => (
     <Grid.Column style={{maxWidth: 780}}>
       <Icon
-        name={snippet.isSaved ? 'check' : 'save'}
+        name={snippet.isSaved ? 'check' : 'save outline'}
         color='green'
         floated='right'
-        style={{fontSize: 36, float: 'right', cursor: snippet.isSaved ? 'default' : 'pointer'}}
+        style={{fontSize: 32, float: 'right', cursor: snippet.isSaved ? 'default' : 'pointer'}}
         onClick={handleSave}
       />
     </Grid.Column>
