@@ -17,7 +17,32 @@ p > span {
   text-align: center;
 }
 
+/********************************************************************** 
+* REACT SIMPLE CODE EDITOR CSS OVERRIDES
+**********************************************************************/
+
 textarea:focus {
   border: none !important;
   outline: none !important;
+}
+
+/********************************************************************** 
+* REPRISM PLUGIN CSS OVERRIDES
+**********************************************************************/
+
+:not(pre) > code[class*="language-"], pre[class*="language-"]  {
+  background: none !important;
+}
+
+pre[class*="language-"] {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+code[class*="language-"], pre[class*="language-"] {
+  line-height: inherit !important;
+  font-family: inherit !important; /* Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace */
+  font-size: inherit !important;
+  color: inherit !important;
+  line-height: inherit !important;
 }
