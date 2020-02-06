@@ -6,7 +6,6 @@ import {
   Container,
   Grid,
   Header,
-  Button,
   Icon,
 } from 'semantic-ui-react';
 
@@ -21,7 +20,8 @@ const Snippet = ({ match }) => {
     title: 'Some Snippet',
     body: `class App extends Component {\n  state = {\n    users: [],\n  };\n}\n\nconst person = {\n  firstName: 'John',\n  lastName: 'Doe',\n  age: 22,\n  active: false,\n};`,
     slug: 'some-snippet',
-    language: 'javascript'
+    category: 'JavaScript',
+    language: 'javascript',
   });
 
   const handleEditClick = () => {
@@ -30,33 +30,33 @@ const Snippet = ({ match }) => {
   };
 
   const handleSubmit = () => {
-    console.log('submit');
+    console.log(snippet);
     setIsReadOnly(!isReadOnly);
   };
 
   const handleCancel = () => {
     setIsReadOnly(!isReadOnly);
     setSnippet(snippetBackup);
-  }
+  };
 
   const handleDeleteClick = () => {
     const deleteConfirmed = window.confirm(`Are you sure you want to delete ${snippet.title}?`);
     if (deleteConfirmed) {
       console.log('DELETE...');
     }
-  }
+  };
 
   const showEditDeleteButtons = () => (
     <Grid.Column style={{maxWidth: 780}}>
-      <Button onClick={handleEditClick} basic compact color='blue' floated='right'>Edit</Button>
-      <Button onClick={handleDeleteClick} basic compact color='red' floated='right' style={{marginRight: 10}}>Delete</Button>
+      <Icon name='edit outline' color='blue' style={{fontSize: 24, float: 'right', cursor: 'pointer'}} onClick={handleEditClick} />
+      <Icon name='trash alternate outline' color='red' style={{fontSize: 24, marginRight: '15px', float: 'right', cursor: 'pointer'}} onClick={handleDeleteClick} />
     </Grid.Column>
   );
 
   const showSaveCancelButtons = () => (
     <Grid.Column style={{maxWidth: 780}}>
-      <Button onClick={handleSubmit} basic compact positive floated='right'>Save</Button>
-      <Button onClick={handleCancel} basic compact color='grey' floated='right' style={{marginRight: 10}}>Cancel</Button>
+      <Icon name='save outline' color='green' style={{fontSize: 28, float: 'right', cursor: 'pointer'}} onClick={handleSubmit} />
+      <Icon name='cancel' color='grey' style={{fontSize: 26, marginRight: '10px', float: 'right', cursor: 'pointer'}} onClick={handleCancel} />
     </Grid.Column>
   );
 
