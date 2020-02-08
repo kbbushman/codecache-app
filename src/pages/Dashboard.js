@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Container,
@@ -11,13 +11,27 @@ import {
 } from 'semantic-ui-react';
 
 // TEMP DATA: REMOVE
-import tempSnippets from '../config/data/snippets.json';
+// import tempSnippets from '../config/data/snippets.json';
 
 
 const DashBoard = () => {
   const [query, setQuery] = useState('');
-  const [fetchedCategories, setFetchedCategories] = useState(tempSnippets);
-  const [categories, setCategories] = useState([...fetchedCategories]);
+  const [fetchedCategories, setFetchedCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((stream) => stream.json())
+      .then((res) => {
+        setFetchedCategories(res.categories);
+        setCategories(res.categories);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const handleChange = (event) => {
     const { value } = event.target;
@@ -43,7 +57,7 @@ const DashBoard = () => {
       setCategories(filteredCategories);
     } else {
       // Reset Categories
-      setCategories([...fetchedCategories]);
+      setCategories(fetchedCategories);
     }
   };
 
@@ -65,7 +79,7 @@ const DashBoard = () => {
   const showSnippets = (category) => (
     category.snippets.map((snippet) => (
       <Grid.Column key={snippet._id}>
-        <Link to={`/categories/${category.slug}/${snippet.slug}`} style={{fontSize: '1.2em'}} >
+        <Link to={`/${category.slug}/${snippet.slug}`} style={{fontSize: '1.2em'}} >
           {snippet.title}
         </Link>
       </Grid.Column>
