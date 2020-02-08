@@ -19,7 +19,7 @@ export default ({ currentUser, handleLogin }) => (
     <Route path='/new-snippet' render={() => 
       currentUser.isLoggedIn ? <NewSnippet /> : <Redirect to='/login' />
     } />
-    <Route path={'/categories/:category/:snippet'} render={() => 
+    <Route path={'/:category/:snippet'} render={() => 
       currentUser.isLoggedIn ? <Snippet /> : <Redirect to='/login' />
     } />
   </Switch>
