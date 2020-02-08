@@ -12,7 +12,7 @@ import {
 // import "prismjs/themes/prism-twilight.css";
 import './Snippet.css';
 
-const Snippet = ({ match }) => {
+const Snippet = ({ match, history }) => {
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [snippetBackup, setSnippetBackup] = useState({});
@@ -78,7 +78,23 @@ const Snippet = ({ match }) => {
   const handleDeleteClick = () => {
     const deleteConfirmed = window.confirm(`Are you sure you want to delete ${snippet.title}?`);
     if (deleteConfirmed) {
-      console.log('DELETE...');
+      setIsLoading(true);
+      fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${snippet._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+        .then((stream) => stream.json())
+        .then((res) => {
+          console.log(res);
+          setIsLoading(false);
+          history.push('/dashboard');
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+        });
     }
   };
 
