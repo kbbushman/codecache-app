@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import Editor from 'react-simple-code-editor';
 import Prism from 'prismjs/prism';
@@ -16,13 +16,28 @@ const Snippet = ({ match }) => {
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [snippetBackup, setSnippetBackup] = useState({});
   const [snippet, setSnippet] = useState({
-    _id: 22,
-    title: 'Some Snippet',
-    body: `class App extends Component {\n  state = {\n    users: [],\n  };\n}\n\nconst person = {\n  firstName: 'John',\n  lastName: 'Doe',\n  age: 22,\n  active: false,\n};`,
-    slug: 'some-snippet',
-    category: 'JavaScript',
+    title: '',
+    body: '',
+    slug: '',
+    category: '',
     language: 'javascript',
   });
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${match.params.snippet}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((stream) => stream.json())
+      .then((res) => {
+        // console.log(res);
+        if (res.status === 200) {
+          setSnippet(res.snippet);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [match]);
 
   const handleEditClick = () => {
     setIsReadOnly(!isReadOnly);
@@ -65,7 +80,7 @@ const Snippet = ({ match }) => {
       <Grid centered columns={1} padded stackable>
         <Grid.Column style={{maxWidth: 780}}>
           <Header as='h1' style={{color: '#fbbd08', marginBottom: 20}}>
-            {match.params.snippet.toUpperCase()} {!isReadOnly && <Icon name='edit' style={{fontSize: 20, position: 'relative', left: 10, bottom: 10}} />}
+            {snippet.title} {!isReadOnly && <Icon name='edit' style={{fontSize: 20, position: 'relative', left: 10, bottom: 10}} />}
           </Header>
           <Editor
             value={snippet.body}
