@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import Editor from 'react-simple-code-editor';
-import Prism from 'prismjs/prism';
+import { highlight } from 'reprism';
 import {
   Container,
   Grid,
   Header,
   Icon,
 } from 'semantic-ui-react';
+import '../components/NewSnippet/LanguageSupport';
 
-// import "prismjs/themes/prism-twilight.css";
 import './Snippet.css';
+// import "prismjs/themes/prism-twilight.css";
 
 const Snippet = ({ match, history }) => {
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -47,7 +48,6 @@ const Snippet = ({ match, history }) => {
   };
 
   const handleSubmit = () => {
-    console.log(snippet);
     setIsReadOnly(!isReadOnly);
     setIsLoading(true);
     fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${snippet.slug}`, {
@@ -122,7 +122,7 @@ const Snippet = ({ match, history }) => {
           <Editor
             value={snippet.body}
             onValueChange={code => setSnippet({...snippet, body: code})}
-            highlight={code => Prism.highlight(code, Prism.languages[snippet.language], `${snippet.language}`)}
+            highlight={code => highlight(code, snippet.language)}
             padding={30}
             style={{
               // fontFamily: '"Fira code", "Fira Mono", monospace',
