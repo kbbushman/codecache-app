@@ -14,13 +14,15 @@ import './Snippet.css';
 
 const Snippet = ({ match }) => {
   const [isReadOnly, setIsReadOnly] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [snippetBackup, setSnippetBackup] = useState({});
   const [snippet, setSnippet] = useState({
     title: '',
+    language: 'javascript',
     body: '',
     slug: '',
     category: '',
-    language: 'javascript',
+    user: '',
   });
 
   useEffect(() => {
@@ -47,6 +49,25 @@ const Snippet = ({ match }) => {
   const handleSubmit = () => {
     console.log(snippet);
     setIsReadOnly(!isReadOnly);
+    setIsLoading(true);
+    fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${snippet.slug}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(snippet),
+    })
+      .then((stream) => stream.json())
+      .then((res) => {
+        console.log(res);
+        setIsLoading(false);
+        setSnippet(res.snippet);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   };
 
   const handleCancel = () => {
