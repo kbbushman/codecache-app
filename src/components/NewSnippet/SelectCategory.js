@@ -7,12 +7,17 @@ const inputStyle = {
   color: 'whitesmoke',
 };
 
-const SelectCategory = ({ categories, handleChange, handleAddCategory }) => {
+const SelectCategory = ({ categories, handleChange, handleAddCategory, categoryId }) => {
+  let selectedCategory;
   const categoryOptions = categories.map((category) => {
+    if (category._id === categoryId) {
+      selectedCategory = category._id;
+    }
+
     return {
       key: category._id,
       text: category.name,
-      value: category.name
+      value: categoryId ? category._id : category.name
     }
   });
 
@@ -32,6 +37,7 @@ const SelectCategory = ({ categories, handleChange, handleAddCategory }) => {
       style={inputStyle}
       onChange={handleChange}
       onAddItem={handleAddItem}
+      value={selectedCategory}
     />  
   )
 };

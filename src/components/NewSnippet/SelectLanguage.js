@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from 'semantic-ui-react';
 
-const SelectLanguage = ({ handleChange }) => {
+const SelectLanguage = ({ handleChange, language }) => {
 
   const selectOptions = [
     {key: 'bash', text: 'Bash', value: 'bash'},
@@ -62,6 +62,7 @@ const SelectLanguage = ({ handleChange }) => {
       options={selectOptions}
       placeholder='Select Syntax'
       onChange={handleChange}
+      value={language}
     />
   )
 };
