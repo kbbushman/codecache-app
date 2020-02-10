@@ -6,16 +6,26 @@ import {
   Container,
   Grid,
   Header,
+  Form,
+  Input,
   Icon,
 } from 'semantic-ui-react';
+import SelectLanguage from '../components/NewSnippet/SelectLanguage';
+import SelectCategory from '../components/NewSnippet/SelectCategory';
 import '../components/NewSnippet/LanguageSupport';
 
 import './Snippet.css';
 // import "prismjs/themes/prism-twilight.css";
 
+const inputStyle = {
+  background: 'hsla(360, 100% , 100%, .15)',
+  color: 'whitesmoke',
+};
+
 const Snippet = ({ match, history }) => {
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
   const [snippetBackup, setSnippetBackup] = useState({});
   const [snippet, setSnippet] = useState({
     title: '',
@@ -45,6 +55,62 @@ const Snippet = ({ match, history }) => {
   const handleEditClick = () => {
     setIsReadOnly(!isReadOnly);
     setSnippetBackup(JSON.parse(JSON.stringify(snippet)));
+    getCategories();
+  };
+
+  const handleTitleChange = (event) => {
+    setSnippet({...snippet, title: event.target.value});
+  };
+
+  const handleLanguageChange = (event, result) => {
+    setSnippet({...snippet, language: result.value});
+  };
+
+  const handleCategoryChange = (event, result) => {
+    setSnippet({...snippet, category: result.value});
+  };
+
+  const handleCancel = () => {
+    setIsReadOnly(!isReadOnly);
+    setSnippet(snippetBackup);
+  };
+
+  const getCategories = () => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((stream) => stream.json())
+      .then((res) => {
+        // console.log(res);
+        if (res.status === 200) {
+          setCategories(res.categories);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleAddCategory = (newCategory) => {
+    console.log('New Category = ', newCategory)
+    fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({name: newCategory}),
+    })
+      .then((stream) => stream.json())
+      .then((res) => {
+        console.log(res);
+        if (res.status === 201) {
+          setCategories([...categories, res.category]);
+          setSnippet({...snippet, category: res.category._id});
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleSubmit = () => {
@@ -68,11 +134,6 @@ const Snippet = ({ match, history }) => {
         console.log(err);
         setIsLoading(false);
       });
-  };
-
-  const handleCancel = () => {
-    setIsReadOnly(!isReadOnly);
-    setSnippet(snippetBackup);
   };
 
   const handleDeleteClick = () => {
@@ -112,13 +173,31 @@ const Snippet = ({ match, history }) => {
     </Grid.Column>
   );
 
+  
+
   return (
     <Container>
       <Grid centered columns={1} padded stackable>
         <Grid.Column style={{maxWidth: 780}}>
-          <Header as='h1' style={{color: '#fbbd08', marginBottom: 20}}>
-            {snippet.title} {!isReadOnly && <Icon name='edit' style={{fontSize: 20, position: 'relative', left: 10, bottom: 10}} />}
-          </Header>
+          {isReadOnly
+            ? <Header as='h1' style={{color: '#fbbd08', marginBottom: 20}}>
+                {snippet.title} {!isReadOnly && <Icon name='edit' style={{fontSize: 20, position: 'relative', left: 10, bottom: 10}} />}
+              </Header>
+            : <Form size='huge' style={{marginBottom: 20}}>
+                <Form.Field>
+                  <Input placeholder='Title' value={snippet.title} onChange={handleTitleChange}>
+                    <input style={inputStyle} />
+                    <SelectLanguage handleChange={handleLanguageChange} language={snippet.language} />
+                  </Input>
+                </Form.Field>
+                <SelectCategory
+                  categories={categories}
+                  handleChange={handleCategoryChange}
+                  handleAddCategory={handleAddCategory}
+                  categoryId={snippet.category}
+                />
+              </Form>
+          }
           <Editor
             value={snippet.body}
             onValueChange={code => setSnippet({...snippet, body: code})}
