@@ -10,9 +10,15 @@ import NewSnippet from '../pages/NewSnippet';
 
 export default ({ currentUser, handleLogin }) => (
   <Switch>
-    <Route exact path='/' component={HomePage} />
-    <Route path='/register' component={Register} />
-    <Route path='/login' render={() => <Login handleLogin={handleLogin} />} />
+    <Route exact path='/' render={() => 
+      !currentUser.isLoggedIn ? <HomePage /> : <Redirect to='/dashboard' />
+    } />
+    <Route path='/register' render={() => 
+      !currentUser.isLoggedIn ? <Register /> : <Redirect to='/dashboard' />
+    } />
+    <Route path='/login' render={() =>
+      !currentUser.isLoggedIn ? <Login handleLogin={handleLogin} /> : <Redirect to='/dashboard' />
+    } />
     <Route path='/dashboard' render={() => 
       currentUser.isLoggedIn ? <Dashboard /> : <Redirect to='/login' />
     } />
