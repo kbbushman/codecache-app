@@ -17,6 +17,11 @@ p > span {
   text-align: center;
 }
 
+input {
+  background: hsla(360, 100% , 100%, .15) !important;
+  color: whitesmoke !important;
+}
+
 /********************************************************************** 
 * REACT SIMPLE CODE EDITOR CSS OVERRIDES
 **********************************************************************/
