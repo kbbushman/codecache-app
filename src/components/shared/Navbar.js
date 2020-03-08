@@ -20,32 +20,23 @@ const Navbar = ({ currentUser, logout }) => {
           </Menu.Item>
           {currentUser.isLoggedIn && (
             <Menu.Item position='right'>
-              {/* <Button as={NavLink} to='/dashboard' basic compact color='teal' style={{fontSize: 15, marginRight: '.5em'}}>
-                Dashboard
-              </Button>
-              <Button as={NavLink} to='/dashboard' basic compact color='pink' style={{fontSize: 15, marginRight: '.5em'}}>
-                +
-              </Button>
-              <Button onClick={logout} basic compact color='grey' style={{fontSize: 15}}>
-                Logout
-              </Button> */}
               <Link to='/dashboard'>
-                <Icon name='home' color='blue' style={{fontSize: 22, marginRight: '.5em', cursor: 'pointer'}} />
+                <Icon name='home' title='Dashboard' color='blue' style={{fontSize: 22, marginRight: '.5em', cursor: 'pointer'}} />
               </Link>
               <Link to='/new-snippet'>
-                <Icon name='plus' color='blue' style={{fontSize: 22, marginRight: '.5em', cursor: 'pointer'}} />
+                <Icon name='plus' title='New Snippet' color='blue' style={{fontSize: 22, marginRight: '.5em', cursor: 'pointer'}} />
               </Link>
-              <Icon name='sign-out' color='blue' onClick={logout} style={{fontSize: 22, cursor: 'pointer'}} />
+              <Icon name='sign-out' title='Log Out' color='blue' onClick={logout} style={{fontSize: 22, cursor: 'pointer'}} />
             </Menu.Item>
           )}
           {!currentUser.isLoggedIn && (
             <Menu.Item position='right'>
-              <Button as={NavLink} to='/login' inverted>
-                Log in
-              </Button>
-              <Button as={NavLink} to='/register' inverted style={{ marginLeft: '0.5em' }}>
-                Register
-              </Button>
+              <Link to='/login'>
+                <Icon name='sign-in' title='Login' color='blue' style={{fontSize: 26, marginRight: '.5em', cursor: 'pointer'}} />
+              </Link>
+              <Link to='/register'>
+                <Icon name='signup' title='register' color='blue' style={{fontSize: 22, marginRight: '.5em', cursor: 'pointer'}} />
+              </Link>
             </Menu.Item>
           )}
         </Container>
