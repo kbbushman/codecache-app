@@ -90,13 +90,13 @@ const Register = ({ history }) => {
   };
 
   return (
-    <Grid textAlign='center' style={{marginTop: 100}}>
+    <Grid textAlign='center' style={{marginTop: 80}}>
       <Grid.Column style={{maxWidth: 450}}>
         <Header as='h2' color='yellow' textAlign='center'>
           Register Your Account
         </Header>
-        <Form size='large' onSubmit={handleSubmit}>
-          <Segment stacked>
+        <Segment stacked style={{background: '#252839', color: 'whitesmoke'}}>
+          <Form size='huge' onSubmit={handleSubmit}>
             <Form.Input
               fluid
               icon='user'
@@ -149,17 +149,17 @@ const Register = ({ history }) => {
             />
             
             <Button color='blue' fluid size='large'>
-              Register
+              Register Account
             </Button>
-          </Segment>
-        </Form>
+          </Form>
+        </Segment>
         {errors.messageList.length > 0 && <Message
           error
           header='There were some errors with your submission'
           list={errors.messageList}
         />}
-        <Message>
-          Already have an account? <Link to='/login'>Login</Link>
+        <Message style={{background: '#252839', color: 'whitesmoke'}}>
+          Already have an account? <Link color="blue" style={{paddingLeft: '6px'}} to='/login'>Login</Link>
         </Message>
       </Grid.Column>
     </Grid>

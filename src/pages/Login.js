@@ -76,13 +76,13 @@ const Login = ({ handleLogin, history }) => {
   };
 
   return (
-    <Grid textAlign='center' style={{marginTop: 100}}>
+    <Grid textAlign='center' style={{marginTop: 80}}>
       <Grid.Column style={{maxWidth: 450}}>
         <Header as='h2' color='yellow' textAlign='center'>
           Welcome Back!
         </Header>
-        <Form size='large' onSubmit={handleSubmit}>
-          <Segment stacked>
+        <Segment stacked style={{background: '#252839', color: 'whitesmoke'}}>
+          <Form size='huge' onSubmit={handleSubmit}>
             <Form.Input
               fluid icon='envelope'
               iconPosition='left'
@@ -106,15 +106,15 @@ const Login = ({ handleLogin, history }) => {
             <Button color='blue' fluid size='large'>
               Log In
             </Button>
-          </Segment>
-        </Form>
+          </Form>
+        </Segment>
         {errors.messageList.length > 0 && <Message
           error
           header='There were some errors with your submission'
           list={errors.messageList}
         />}
-        <Message>
-          Don't have an account? <Link to='/register'>Register</Link>
+        <Message style={{background: '#252839', color: 'whitesmoke'}}>
+          Don't have an account? <Link color="blue" style={{paddingLeft: '6px'}} to='/register'>Register</Link>
         </Message>
       </Grid.Column>
     </Grid>
