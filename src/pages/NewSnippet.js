@@ -8,10 +8,14 @@ import {
   Header,
   Form,
   Input,
+  Message,
+  Modal,
+  Button,
   Icon,
 } from 'semantic-ui-react';
 import SelectLanguage from '../components/NewSnippet/SelectLanguage';
 import SelectCategory from '../components/NewSnippet/SelectCategory';
+// import ErrorModal from '../components/shared/ErrorModal';
 import '../components/NewSnippet/LanguageSupport';
 
 import './Snippet.css';
@@ -22,12 +26,13 @@ const inputStyle = {
 };
 
 const NewSnippet = ({ history }) => {
+  const [errors, setErrors] = useState({messageList: []});
   const [categories, setCategories] = useState([]);
   const [snippet, setSnippet] = useState({
     title: '',
     body: '',
     category: '',
-    language: 'javascript',
+    language: '',
     isSaved: false,
   });
 
@@ -53,21 +58,36 @@ const NewSnippet = ({ history }) => {
   };
 
   const handleSaveSnippet = () => {
-    fetch(`${process.env.REACT_APP_BASE_URL}/snippets`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify(snippet),
-    })
-      .then((stream) => stream.json())
-      .then((res) => {
-        console.log(res);
-        setSnippet({...snippet, isSaved: true});
-        setTimeout(() =>  history.push('/dashboard'), 2000);
+    const errors = {messageList: []};
+    let formIsValid = true;
+
+    for (let key in snippet) {
+      if (snippet[key] === '') {
+        formIsValid = false;
+        errors[key] = true;
+        errors.messageList.push(`${key === 'language' ? 'syntax' : key} is required`);
+      }
+    }
+
+    setErrors(errors);
+
+    if (formIsValid) {
+      fetch(`${process.env.REACT_APP_BASE_URL}/snippets`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(snippet),
       })
-      .catch((err) => console.log(err));
+        .then((stream) => stream.json())
+        .then((res) => {
+          console.log(res);
+          setSnippet({...snippet, isSaved: true});
+          setTimeout(() =>  history.push('/dashboard'), 2000);
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const handleCancel = () => {
@@ -120,46 +140,72 @@ const NewSnippet = ({ history }) => {
   );
 
   return (
-    <Container>
-      <Grid centered columns={1} padded>
-        <Grid.Column style={{maxWidth: 780}}>
-          <Header as='h2' color='yellow'>New Snippet</Header>
-        </Grid.Column>
-        <Grid.Column style={{maxWidth: 780}}>
-          <Form size='huge'>
-            <Form.Field>
-              <Input placeholder='Title' value={snippet.title} onChange={handleChange}>
-                <input style={inputStyle} />
-                <SelectLanguage handleChange={handleLanguageChange} />
-              </Input>
-            </Form.Field>
-            <SelectCategory
-              categories={categories}
-              handleChange={handleCategoryChange}
-              handleAddCategory={handleAddCategory}
+    <>
+      <Container>
+        <Grid centered columns={1} padded>
+          <Grid.Column style={{maxWidth: 780}}>
+            <Header as='h2' color='yellow'>New Snippet</Header>
+          </Grid.Column>
+          <Grid.Column style={{maxWidth: 780}}>
+            <Form size='huge'>
+              <Form.Field>
+                <Input placeholder='Title' value={snippet.title} onChange={handleChange}>
+                  <input style={inputStyle} />
+                  <SelectLanguage handleChange={handleLanguageChange} />
+                </Input>
+              </Form.Field>
+              <SelectCategory
+                categories={categories}
+                handleChange={handleCategoryChange}
+                handleAddCategory={handleAddCategory}
+              />
+            </Form>
+          </Grid.Column>
+          <Grid.Column style={{maxWidth: 780}}>
+            <Editor
+              value={snippet.body}
+              onValueChange={(code) => setSnippet({...snippet, body: code})}
+              highlight={(code) => highlight(code, snippet.language || 'javascript')}
+              padding={30}
+              style={{
+                // fontFamily: '"Fira code", "Fira Mono", monospace',
+                minHeight: 100,
+                fontFamily: 'monospace',
+                fontSize: 15,
+                border: '2px solid hsla(360, 100% , 100%, .15)',
+                backgroundColor: 'hsla(360, 100% , 100%, .05)',
+                color: 'lightblue',
+              }}
             />
-          </Form>
-        </Grid.Column>
-        <Grid.Column style={{maxWidth: 780}}>
-          <Editor
-            value={snippet.body}
-            onValueChange={(code) => setSnippet({...snippet, body: code})}
-            highlight={(code) => highlight(code, snippet.language)}
-            padding={30}
-            style={{
-              // fontFamily: '"Fira code", "Fira Mono", monospace',
-              minHeight: 100,
-              fontFamily: 'monospace',
-              fontSize: 15,
-              border: '2px solid hsla(360, 100% , 100%, .15)',
-              backgroundColor: 'hsla(360, 100% , 100%, .05)',
-              color: 'lightblue',
-            }}
+          </Grid.Column>
+          {/* <Grid.Column style={{maxWidth: 780}}>
+            {errors.messageList.length > 0 && <Message
+              error
+              header='There were some errors with your submission'
+              list={errors.messageList}
+            />}
+          </Grid.Column> */}
+          {showSaveButton()}
+        </Grid>
+      </Container>
+      <Modal
+        open={errors.messageList.length > 0}
+        size='small'
+      >
+        <Header color='red' icon='exclamation triangle' content='There were errors with your submission' />
+        <Modal.Content>
+          <Message
+            error
+            list={errors.messageList}
           />
-        </Grid.Column>
-        {showSaveButton()}
-      </Grid>
-    </Container>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color='green' onClick={() => setErrors({messageList: []})}>
+            <Icon name='checkmark' /> Got it
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    </>
   )
 };
 
