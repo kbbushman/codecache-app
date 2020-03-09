@@ -15,15 +15,9 @@ import {
 } from 'semantic-ui-react';
 import SelectLanguage from '../components/NewSnippet/SelectLanguage';
 import SelectCategory from '../components/NewSnippet/SelectCategory';
-// import ErrorModal from '../components/shared/ErrorModal';
 import '../components/NewSnippet/LanguageSupport';
 
 import './Snippet.css';
-
-const inputStyle = {
-  background: 'hsla(360, 100% , 100%, .15)',
-  color: 'whitesmoke',
-};
 
 const NewSnippet = ({ history }) => {
   const [errors, setErrors] = useState({messageList: []});
@@ -150,7 +144,7 @@ const NewSnippet = ({ history }) => {
             <Form size='huge'>
               <Form.Field>
                 <Input placeholder='Title' value={snippet.title} onChange={handleChange}>
-                  <input style={inputStyle} />
+                  <input />
                   <SelectLanguage handleChange={handleLanguageChange} />
                 </Input>
               </Form.Field>
