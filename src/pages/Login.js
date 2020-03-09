@@ -82,7 +82,7 @@ const Login = ({ handleLogin, history }) => {
           Welcome Back!
         </Header>
         <Segment stacked style={{background: '#252839', color: 'whitesmoke'}}>
-          <Form size='huge' onSubmit={handleSubmit}>
+          <Form size='huge' autocomplete='off' onSubmit={handleSubmit}>
             <Form.Input
               fluid icon='envelope'
               iconPosition='left'
