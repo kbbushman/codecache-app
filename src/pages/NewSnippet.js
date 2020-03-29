@@ -168,7 +168,7 @@ const NewSnippet = ({ history }) => {
                     handleChange={handleCategoryChange}
                     handleAddCategory={handleAddCategory}
                   />
-                  <p style={{display: 'block', minHeight: 'auto', background: 'none', fontSize: 14, color: 'whitesmoke', marginTop: 15, marginBottom: 0, paddingLeft: 5}}>Click to select a category. Type to filter or add a new category</p>
+                  
                 </Form>
               </Grid.Column>
               <Grid.Column style={{maxWidth: 780}}>
