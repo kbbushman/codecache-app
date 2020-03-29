@@ -120,6 +120,7 @@ const NewSnippet = ({ history }) => {
         if (res.status === 201) {
           setIsLoading(false);
           setCategories([...categories, res.category]);
+          setSnippet({...snippet, category: res.category._id});
         }
       })
       .catch((err) => {
@@ -167,6 +168,7 @@ const NewSnippet = ({ history }) => {
                     categories={categories}
                     handleChange={handleCategoryChange}
                     handleAddCategory={handleAddCategory}
+                    categoryId={snippet.category}
                   />
                 </Form>
               </Grid.Column>
