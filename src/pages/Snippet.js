@@ -28,6 +28,7 @@ const Snippet = ({ match, history }) => {
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [snippetIsCopied, setSnippetIsCopied] = useState(false);
   const [snippetIsDeleted, setSnippetIsDeleted] = useState(false);
   const [categories, setCategories] = useState([]);
   const [snippetBackup, setSnippetBackup] = useState({});
@@ -61,6 +62,23 @@ const Snippet = ({ match, history }) => {
         setErrors({messageList: ['Please verify your internet connenction and try again']})
       });
   }, [match]);
+
+  const handleClipboardClick = () => {
+    try {
+      const textArea = document.createElement('textarea');
+      textArea.value = snippet.body;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      textArea.remove();
+      setSnippetIsCopied(true);
+      setTimeout(() => {
+        setSnippetIsCopied(false);
+      }, 2000);
+    } catch (err) {
+      setErrors({messageList: ['Could not copy snippet to clipboard. Refresh this page and try again']});
+    }
+  };
 
   const handleEditClick = () => {
     setIsReadOnly(!isReadOnly);
@@ -204,7 +222,8 @@ const Snippet = ({ match, history }) => {
 
   const showEditDeleteButtons = () => (
     <Grid.Column style={{maxWidth: 780}}>
-      {!snippetIsDeleted && <Icon name='edit outline' color='blue' style={{fontSize: 24, float: 'right', cursor: 'pointer'}} onClick={handleEditClick} />}
+      <Icon name={snippetIsCopied ? "clipboard check" : "clipboard outline"} color={snippetIsCopied ? "green" : "blue"} style={{fontSize: 26, float: 'right', cursor: 'pointer'}} onClick={handleClipboardClick} />
+      {!snippetIsDeleted && <Icon name='edit outline' color='blue' style={{fontSize: 24, marginRight: '12px', float: 'right', cursor: 'pointer'}} onClick={handleEditClick} />}
       <Icon name={snippetIsDeleted ? 'check' : 'trash alternate outline'} color={snippetIsDeleted ? 'green' : 'red'} style={{fontSize: 24, marginRight: '15px', float: 'right', cursor: 'pointer'}} onClick={() => setIsDeleteMode(true)} />
     </Grid.Column>
   );
