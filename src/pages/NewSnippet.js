@@ -83,9 +83,9 @@ const NewSnippet = ({ history }) => {
       })
         .then((stream) => stream.json())
         .then((res) => {
-          // setIsLoading(false);
           setSnippet({...snippet, isSaved: true});
-          setTimeout(() => history.push('/dashboard'), 200);
+          setTimeout(() => setIsLoading(false), 200);
+          setTimeout(() => history.push('/dashboard'), 1500);
         })
         .catch((err) => {
           setErrors({messageList: ['Please verify your internet connenction and try again']});
@@ -135,12 +135,12 @@ const NewSnippet = ({ history }) => {
         style={{fontSize: 28, float: 'right', cursor: snippet.isSaved ? 'default' : 'pointer'}}
         onClick={handleSaveSnippet}
       />
-      <Icon
+      {!snippet.isSaved && <Icon
         name='times'
         color='grey'
         style={{fontSize: 28, marginRight: '10px', float: 'right', cursor: 'pointer'}}
         onClick={handleCancel}
-      />
+      />}
     </Grid.Column>
   );
 
@@ -168,7 +168,6 @@ const NewSnippet = ({ history }) => {
                     handleChange={handleCategoryChange}
                     handleAddCategory={handleAddCategory}
                   />
-                  
                 </Form>
               </Grid.Column>
               <Grid.Column style={{maxWidth: 780}}>

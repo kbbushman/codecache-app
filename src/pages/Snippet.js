@@ -27,7 +27,8 @@ const Snippet = ({ match, history }) => {
   const [errors, setErrors] = useState({messageList: []});
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [snippetIsDeleted, setSnippetIsDeleted] = useState(false);
   const [categories, setCategories] = useState([]);
   const [snippetBackup, setSnippetBackup] = useState({});
   const [snippet, setSnippet] = useState({
@@ -155,9 +156,10 @@ const Snippet = ({ match, history }) => {
     })
       .then((stream) => stream.json())
       .then((res) => {
-        // setIsLoading(false);
         setIsDeleteMode(false);
-        setTimeout(() => history.push('/dashboard'), 200);
+        setSnippetIsDeleted(true);
+        setTimeout(() => setIsLoading(false), 200);
+        setTimeout(() => history.push('/dashboard'), 1500);
       })
       .catch((err) => {
         setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
@@ -166,8 +168,8 @@ const Snippet = ({ match, history }) => {
 
   const showEditDeleteButtons = () => (
     <Grid.Column style={{maxWidth: 780}}>
-      <Icon name='edit outline' color='blue' style={{fontSize: 24, float: 'right', cursor: 'pointer'}} onClick={handleEditClick} />
-      <Icon name='trash alternate outline' color='red' style={{fontSize: 24, marginRight: '15px', float: 'right', cursor: 'pointer'}} onClick={() => setIsDeleteMode(true)} />
+      {!snippetIsDeleted && <Icon name='edit outline' color='blue' style={{fontSize: 24, float: 'right', cursor: 'pointer'}} onClick={handleEditClick} />}
+      <Icon name={snippetIsDeleted ? 'check' : 'trash alternate outline'} color={snippetIsDeleted ? 'green' : 'red'} style={{fontSize: 24, marginRight: '15px', float: 'right', cursor: 'pointer'}} onClick={() => setIsDeleteMode(true)} />
     </Grid.Column>
   );
 
