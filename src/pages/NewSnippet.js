@@ -83,9 +83,14 @@ const NewSnippet = ({ history }) => {
       })
         .then((stream) => stream.json())
         .then((res) => {
-          setSnippet({...snippet, isSaved: true});
-          setTimeout(() => setIsLoading(false), 200);
-          setTimeout(() => history.push('/dashboard'), 1500);
+          if (res.status === 201) {
+            setSnippet({...snippet, isSaved: true});
+            setIsLoading(false);
+            setTimeout(() => history.push('/dashboard'), 1000);
+          } else {
+            setIsLoading(false);
+            setErrors({messageList: res.error.split(',')});
+          }
         })
         .catch((err) => {
           setErrors({messageList: ['Please verify your internet connenction and try again']});
