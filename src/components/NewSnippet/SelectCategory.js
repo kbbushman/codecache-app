@@ -17,7 +17,7 @@ const SelectCategory = ({ categories, handleChange, handleAddCategory, categoryI
     return {
       key: category._id,
       text: category.name,
-      value: categoryId ? category._id : category.name
+      value: category._id,
     }
   });
 
