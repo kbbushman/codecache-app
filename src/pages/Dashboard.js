@@ -3,23 +3,27 @@ import { Link } from 'react-router-dom';
 import {
   Container,
   Grid,
+  Message,
+  Modal,
+  Dimmer,
+  Loader,
   Header,
   Form,
   Input,
   Divider,
   Icon,
+  Button,
 } from 'semantic-ui-react';
 
-// TEMP DATA: REMOVE
-// import tempSnippets from '../config/data/snippets.json';
-
-
 const DashBoard = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({messageList: []});
   const [query, setQuery] = useState('');
   const [fetchedCategories, setFetchedCategories] = useState([]);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    setIsLoading(true)
     fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -27,10 +31,13 @@ const DashBoard = () => {
     })
       .then((stream) => stream.json())
       .then((res) => {
+        setIsLoading(false);
         setFetchedCategories(res.categories);
         setCategories(res.categories);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setErrors({messageList: ['Please verify your internet connenction and try again']});
+      });
   }, []);
 
   const handleChange = (event) => {
@@ -66,7 +73,7 @@ const DashBoard = () => {
       <Grid.Column style={{maxWidth: 780}}>
         <Form size='huge' style={{marginTop: 60}}>
           <Form.Field>
-            <Input icon placeholder='Search...' value={query} onChange={handleChange}>
+            <Input icon placeholder='Filter category or snippet title' value={query} onChange={handleChange}>
               <input style={{background: 'hsla(360, 100% , 100%, .15)', color: 'whitesmoke'}} />
               <Icon inverted name='search' />
             </Input>
@@ -86,25 +93,65 @@ const DashBoard = () => {
     ))
   );
 
-  const showCategories = () => (
-    categories.map((category) => (
-      <Grid key={category._id} centered columns={1} padded stackable>
-        <Grid.Column style={{ maxWidth: 780, marginTop: 60}}>
-          <Header as='h2' color='yellow'>{category.name}</Header>
-          <Divider />
-          <Grid columns={3} padded>
-            {showSnippets(category)}
-          </Grid>
+  const showCategories = () => {
+    return categories.length
+    ? categories.map((category) => (
+        <Grid key={category._id} centered columns={1} padded stackable>
+          <Grid.Column style={{ maxWidth: 780, marginTop: 60}}>
+            <Header as='h2' color='yellow'>{category.name}</Header>
+            <Divider />
+            <Grid columns={3} padded>
+              {showSnippets(category)}
+            </Grid>
+          </Grid.Column>
+        </Grid>
+      ))
+    : <Grid centered columns={1} padded stackable>
+        <Grid.Column style={{ maxWidth: 780, marginTop: 0, textAlign: 'center'}}>
+          <p style={{background: 'none', color: 'whitesmoke', fontSize: 20, marginBottom: 0}}>
+            No matching results
+          </p>
         </Grid.Column>
       </Grid>
-    ))
-  );
+  };
 
   return (
-    <Container>
-      {showSearch()}
-      {showCategories()}
-    </Container>
+    <>
+      {isLoading 
+        ? <Dimmer active>
+            <Loader size='massive'>Loading</Loader>
+          </Dimmer>
+        : <Container>
+            {fetchedCategories.length && showSearch()}
+            {fetchedCategories.length
+              ? showCategories()
+              : <Grid centered columns={1} padded stackable>
+                  <Grid.Column style={{ maxWidth: 780, marginTop: 0, textAlign: 'center'}}>
+                    <p style={{background: 'none', color: 'whitesmoke', fontSize: 20, marginBottom: 0}}>
+                      Add a new snippet to get started
+                    </p>
+                    <Link to='/new-snippet'><Button color='green'>Add Snippet</Button></Link>
+                  </Grid.Column>
+                </Grid>
+            }
+          </Container>
+      }
+      <Modal open={errors.messageList.length > 0} basic size='small'>
+        <Header size='large' color='red' icon='exclamation triangle' content='Oops! Someting went wrong...' />
+        <Modal.Content>
+          <Message
+            error
+            list={errors.messageList}
+            style={{background: 'none', color: 'white', fontSize: 18}}
+          />
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color='green' onClick={() => setErrors({messageList: []})}>
+            <Icon name='checkmark' /> Got it
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    </>
   )
 };
 
