@@ -52,6 +52,9 @@ const Snippet = ({ match, history }) => {
         if (res.status === 200) {
           setIsLoading(false);
           setSnippet(res.snippet);
+        } else {
+          setIsLoading(false);
+          setErrors({messageList: res.error.split(',')});
         }
       })
       .catch((err) => {
@@ -95,6 +98,9 @@ const Snippet = ({ match, history }) => {
         if (res.status === 200) {
           setIsLoading(false);
           setCategories(res.categories);
+        } else {
+          setIsLoading(false);
+          setErrors({messageList: res.error.split(',')});
         }
       })
       .catch((err) => {
@@ -118,6 +124,9 @@ const Snippet = ({ match, history }) => {
           setIsLoading(false);
           setCategories([...categories, res.category]);
           setSnippet({...snippet, category: res.category._id});
+        } else {
+          setIsLoading(false);
+          setErrors({messageList: res.error.split(',')});
         }
       })
       .catch((err) => {
@@ -125,25 +134,46 @@ const Snippet = ({ match, history }) => {
       });
   };
 
-  const handleSubmit = () => {
-    setIsLoading(true);
-    setIsReadOnly(!isReadOnly);
-    fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${snippet.slug}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify(snippet),
-    })
-      .then((stream) => stream.json())
-      .then((res) => {
-        setIsLoading(false);
-        setSnippet(res.snippet);
+  const handleSaveSnippet = () => {
+    const errors = {messageList: []};
+    let formIsValid = true;
+
+    for (let key in snippet) {
+      if (snippet[key] === '') {
+        formIsValid = false;
+        errors[key] = true;
+        errors.messageList.push(`${key === 'language' ? 'syntax' : key} is required`);
+      }
+    }
+
+    setErrors(errors);
+    
+    if (formIsValid) {
+      setIsLoading(true);
+      setIsReadOnly(!isReadOnly);
+      fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${snippet.slug}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(snippet),
       })
-      .catch((err) => {
-        setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
-      });
+        .then((stream) => stream.json())
+        .then((res) => {
+          if (res.status === 200) {
+            setIsLoading(false);
+            setSnippet(res.snippet);
+          } else {
+            setIsLoading(false);
+            setIsReadOnly(false);
+            setErrors({messageList: res.error.split(',')});
+          }
+        })
+        .catch((err) => {
+          setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
+        });
+    }
   };
 
   const handleDeleteClick = () => {
@@ -156,10 +186,16 @@ const Snippet = ({ match, history }) => {
     })
       .then((stream) => stream.json())
       .then((res) => {
-        setIsDeleteMode(false);
-        setSnippetIsDeleted(true);
-        setTimeout(() => setIsLoading(false), 200);
-        setTimeout(() => history.push('/dashboard'), 1500);
+        if (res.status === 200) {
+          setIsDeleteMode(false);
+          setSnippetIsDeleted(true);
+          setIsLoading(false);
+          setTimeout(() => history.push('/dashboard'), 1000);
+        } else {
+          setIsLoading(false);
+          setIsDeleteMode(false);
+          setErrors({messageList: res.error.split(',')});
+        }
       })
       .catch((err) => {
         setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
@@ -175,7 +211,7 @@ const Snippet = ({ match, history }) => {
 
   const showSaveCancelButtons = () => (
     <Grid.Column style={{maxWidth: 780}}>
-      <Icon name='save outline' color='green' style={{fontSize: 28, float: 'right', cursor: 'pointer'}} onClick={handleSubmit} />
+      <Icon name='save outline' color='green' style={{fontSize: 28, float: 'right', cursor: 'pointer'}} onClick={handleSaveSnippet} />
       <Icon name='cancel' color='grey' style={{fontSize: 26, marginRight: '10px', float: 'right', cursor: 'pointer'}} onClick={handleCancel} />
     </Grid.Column>
   );
