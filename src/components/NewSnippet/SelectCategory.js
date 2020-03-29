@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Input } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 
 const inputStyle = {
   background: 'hsla(360, 100% , 100%, .15)',
