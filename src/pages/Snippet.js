@@ -48,15 +48,13 @@ const Snippet = ({ match, history }) => {
     })
       .then((stream) => stream.json())
       .then((res) => {
-        // console.log(res);
         if (res.status === 200) {
           setIsLoading(false);
           setSnippet(res.snippet);
         }
       })
       .catch((err) => {
-        // console.log(err);
-        setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']})
+        setErrors({messageList: ['Please verify your internet connenction and try again']})
       });
   }, [match]);
 
@@ -84,6 +82,7 @@ const Snippet = ({ match, history }) => {
   };
 
   const getCategories = () => {
+    setIsLoading(true);
     fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
       method: 'GET',
       headers: {
@@ -92,19 +91,18 @@ const Snippet = ({ match, history }) => {
     })
       .then((stream) => stream.json())
       .then((res) => {
-        // console.log(res);
         if (res.status === 200) {
+          setIsLoading(false);
           setCategories(res.categories);
         }
       })
       .catch((err) => {
-        // console.log(err);
-        setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
+        setErrors({messageList: ['Please verify your internet connenction and try again']});
       });
   };
 
   const handleAddCategory = (newCategory) => {
-    console.log('New Category = ', newCategory)
+    setIsLoading(true);
     fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
       method: 'POST',
       headers: {
@@ -115,21 +113,20 @@ const Snippet = ({ match, history }) => {
     })
       .then((stream) => stream.json())
       .then((res) => {
-        console.log(res);
         if (res.status === 201) {
+          setIsLoading(false);
           setCategories([...categories, res.category]);
           setSnippet({...snippet, category: res.category._id});
         }
       })
       .catch((err) => {
-        // console.log(err);
-        setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']})
+        setErrors({messageList: ['Please verify your internet connenction and try again']})
       });
   };
 
   const handleSubmit = () => {
-    setIsReadOnly(!isReadOnly);
     setIsLoading(true);
+    setIsReadOnly(!isReadOnly);
     fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${snippet.slug}`, {
       method: 'PUT',
       headers: {
@@ -140,12 +137,10 @@ const Snippet = ({ match, history }) => {
     })
       .then((stream) => stream.json())
       .then((res) => {
-        console.log(res);
         setIsLoading(false);
         setSnippet(res.snippet);
       })
       .catch((err) => {
-        // console.log(err);
         setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
       });
   };
@@ -160,13 +155,11 @@ const Snippet = ({ match, history }) => {
     })
       .then((stream) => stream.json())
       .then((res) => {
-        console.log(res);
-        setIsLoading(false);
+        // setIsLoading(false);
         setIsDeleteMode(false);
-        history.push('/dashboard');
+        setTimeout(() => history.push('/dashboard'), 1000);
       })
       .catch((err) => {
-        // console.log(err);
         setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
       });
   };
@@ -184,8 +177,6 @@ const Snippet = ({ match, history }) => {
       <Icon name='cancel' color='grey' style={{fontSize: 26, marginRight: '10px', float: 'right', cursor: 'pointer'}} onClick={handleCancel} />
     </Grid.Column>
   );
-
-  
 
   return (
     <>
@@ -235,12 +226,13 @@ const Snippet = ({ match, history }) => {
             </Grid>
           }
         </Container>
-        <Modal open={errors.messageList.length > 0} size='small' >
-          <Header color='red' icon='exclamation triangle' content='There were errors' />
+        <Modal open={errors.messageList.length > 0} basic size='small' >
+          <Header size='large' color='red' icon='exclamation triangle' content='Oops! Something went wrong...' />
           <Modal.Content>
             <Message
               error
               list={errors.messageList}
+              style={{background: 'none', color: 'white', fontSize: 18, fontWeight: 600}}
             />
           </Modal.Content>
           <Modal.Actions>
