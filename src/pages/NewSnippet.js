@@ -182,15 +182,13 @@ const NewSnippet = ({ history }) => {
           {showSaveButton()}
         </Grid>
       </Container>
-      <Modal
-        open={errors.messageList.length > 0}
-        size='small'
-      >
-        <Header color='red' icon='exclamation triangle' content='There were errors with your submission' />
+      <Modal open={errors.messageList.length > 0} basic size='small'>
+        <Header size='large' color='red' icon='exclamation triangle' content='There were errors with your submission' />
         <Modal.Content>
           <Message
             error
             list={errors.messageList}
+            style={{background: 'none', color: 'white', fontSize: 18}}
           />
         </Modal.Content>
         <Modal.Actions>
