@@ -34,13 +34,13 @@ const SelectCategory = ({ categories, handleChange, handleAddCategory, categoryI
         search
         allowAdditions
         options={categoryOptions}
-        placeholder='Filter/Add Category'
+        placeholder='Category'
         style={inputStyle}
         onChange={handleChange}
         onAddItem={handleAddItem}
         value={selectedCategory}
       />
-      <p style={{display: 'block', minHeight: 'auto', background: 'none', fontSize: 14, color: 'whitesmoke', marginTop: 15, marginBottom: 0, paddingLeft: 5}}>Click to select a category. Type to filter or add a new category</p>
+      <p style={{display: 'block', minHeight: 'auto', background: 'none', fontSize: 14, color: 'whitesmoke', marginTop: 15, marginBottom: 0, paddingLeft: 5}}>Click to select a category. Type to find or add a new category</p>
     </>  
   )
 };
