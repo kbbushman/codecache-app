@@ -8,6 +8,11 @@ import {
   Header,
   Form,
   Input,
+  Dimmer,
+  Loader,
+  Modal,
+  Message,
+  Button,
   Icon,
 } from 'semantic-ui-react';
 import SelectLanguage from '../components/NewSnippet/SelectLanguage';
@@ -17,13 +22,11 @@ import '../components/NewSnippet/LanguageSupport';
 import './Snippet.css';
 // import "prismjs/themes/prism-twilight.css";
 
-const inputStyle = {
-  background: 'hsla(360, 100% , 100%, .15)',
-  color: 'whitesmoke',
-};
 
 const Snippet = ({ match, history }) => {
+  const [errors, setErrors] = useState({messageList: []});
   const [isReadOnly, setIsReadOnly] = useState(true);
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [snippetBackup, setSnippetBackup] = useState({});
@@ -37,6 +40,7 @@ const Snippet = ({ match, history }) => {
   });
 
   useEffect(() => {
+    setIsLoading(true);
     fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${match.params.snippet}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -46,10 +50,14 @@ const Snippet = ({ match, history }) => {
       .then((res) => {
         // console.log(res);
         if (res.status === 200) {
+          setIsLoading(false);
           setSnippet(res.snippet);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // console.log(err);
+        setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']})
+      });
   }, [match]);
 
   const handleEditClick = () => {
@@ -89,7 +97,10 @@ const Snippet = ({ match, history }) => {
           setCategories(res.categories);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // console.log(err);
+        setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
+      });
   };
 
   const handleAddCategory = (newCategory) => {
@@ -110,7 +121,10 @@ const Snippet = ({ match, history }) => {
           setSnippet({...snippet, category: res.category._id});
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // console.log(err);
+        setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']})
+      });
   };
 
   const handleSubmit = () => {
@@ -131,38 +145,36 @@ const Snippet = ({ match, history }) => {
         setSnippet(res.snippet);
       })
       .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
+        // console.log(err);
+        setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
       });
   };
 
   const handleDeleteClick = () => {
-    const deleteConfirmed = window.confirm(`Are you sure you want to delete ${snippet.title}?`);
-    if (deleteConfirmed) {
-      setIsLoading(true);
-      fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${snippet._id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+    setIsLoading(true);
+    fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${snippet._id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((stream) => stream.json())
+      .then((res) => {
+        console.log(res);
+        setIsLoading(false);
+        setIsDeleteMode(false);
+        history.push('/dashboard');
       })
-        .then((stream) => stream.json())
-        .then((res) => {
-          console.log(res);
-          setIsLoading(false);
-          history.push('/dashboard');
-        })
-        .catch((err) => {
-          console.log(err);
-          setIsLoading(false);
-        });
-    }
+      .catch((err) => {
+        // console.log(err);
+        setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
+      });
   };
 
   const showEditDeleteButtons = () => (
     <Grid.Column style={{maxWidth: 780}}>
       <Icon name='edit outline' color='blue' style={{fontSize: 24, float: 'right', cursor: 'pointer'}} onClick={handleEditClick} />
-      <Icon name='trash alternate outline' color='red' style={{fontSize: 24, marginRight: '15px', float: 'right', cursor: 'pointer'}} onClick={handleDeleteClick} />
+      <Icon name='trash alternate outline' color='red' style={{fontSize: 24, marginRight: '15px', float: 'right', cursor: 'pointer'}} onClick={() => setIsDeleteMode(true)} />
     </Grid.Column>
   );
 
@@ -176,47 +188,82 @@ const Snippet = ({ match, history }) => {
   
 
   return (
-    <Container>
-      <Grid centered columns={1} padded stackable>
-        <Grid.Column style={{maxWidth: 780}}>
-          {isReadOnly
-            ? <Header as='h1' style={{color: '#fbbd08', marginBottom: 20}}>
-                {snippet.title} {!isReadOnly && <Icon name='edit' style={{fontSize: 20, position: 'relative', left: 10, bottom: 10}} />}
-              </Header>
-            : <Form size='huge' style={{marginBottom: 20}}>
-                <Form.Field>
-                  <Input placeholder='Title' value={snippet.title} onChange={handleTitleChange}>
-                    <input style={inputStyle} />
-                    <SelectLanguage handleChange={handleLanguageChange} language={snippet.language} />
-                  </Input>
-                </Form.Field>
-                <SelectCategory
-                  categories={categories}
-                  handleChange={handleCategoryChange}
-                  handleAddCategory={handleAddCategory}
-                  categoryId={snippet.category}
+    <>
+      <Container>
+        {isLoading 
+          ? <Dimmer active>
+              <Loader size='massive'>Loading</Loader>
+            </Dimmer>
+          : <Grid centered columns={1} padded stackable>
+              <Grid.Column style={{maxWidth: 780}}>
+                {isReadOnly
+                  ? <Header as='h1' style={{color: '#fbbd08', marginBottom: 20}}>
+                      {snippet.title} {!isReadOnly && <Icon name='edit' style={{fontSize: 20, position: 'relative', left: 10, bottom: 10}} />}
+                    </Header>
+                  : <Form size='huge' style={{marginBottom: 20}}>
+                      <Form.Field>
+                        <Input placeholder='Title' value={snippet.title} onChange={handleTitleChange}>
+                          <input />
+                          <SelectLanguage handleChange={handleLanguageChange} language={snippet.language} />
+                        </Input>
+                      </Form.Field>
+                      <SelectCategory
+                        categories={categories}
+                        handleChange={handleCategoryChange}
+                        handleAddCategory={handleAddCategory}
+                        categoryId={snippet.category}
+                      />
+                    </Form>
+                }
+                <Editor
+                  value={snippet.body}
+                  onValueChange={code => setSnippet({...snippet, body: code})}
+                  highlight={code => highlight(code, snippet.language)}
+                  padding={30}
+                  style={{
+                    // fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontFamily: 'monospace',
+                    fontSize: 15,
+                    border: isReadOnly ? '2px solid hsla(360, 100% , 100%, .15)' : '2px solid #2185d0',
+                    backgroundColor: 'hsla(360, 100% , 100%, .05)',
+                    color: 'lightblue',
+                  }}
+                  readOnly={isReadOnly}
                 />
-              </Form>
+              </Grid.Column>
+              {isReadOnly ? showEditDeleteButtons() : showSaveCancelButtons()}
+            </Grid>
           }
-          <Editor
-            value={snippet.body}
-            onValueChange={code => setSnippet({...snippet, body: code})}
-            highlight={code => highlight(code, snippet.language)}
-            padding={30}
-            style={{
-              // fontFamily: '"Fira code", "Fira Mono", monospace',
-              fontFamily: 'monospace',
-              fontSize: 15,
-              border: isReadOnly ? '2px solid hsla(360, 100% , 100%, .15)' : '2px solid #2185d0',
-              backgroundColor: 'hsla(360, 100% , 100%, .05)',
-              color: 'lightblue',
-            }}
-            readOnly={isReadOnly}
-          />
-        </Grid.Column>
-        {isReadOnly ? showEditDeleteButtons() : showSaveCancelButtons()}
-      </Grid>
-    </Container>
+        </Container>
+        <Modal open={errors.messageList.length > 0} size='small' >
+          <Header color='red' icon='exclamation triangle' content='There were errors' />
+          <Modal.Content>
+            <Message
+              error
+              list={errors.messageList}
+            />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='green' onClick={() => setErrors({messageList: []})}>
+              <Icon name='checkmark' /> Got it
+            </Button>
+          </Modal.Actions>
+        </Modal>
+        <Modal open={isDeleteMode} basic size='small'>
+          <Header>
+            <h2><Icon color="red" name='trash' style={{fontSize: 26}} /> Are you sure you want to delete this snippet?</h2>
+          </Header>
+          <Modal.Content></Modal.Content>
+          <Modal.Actions>
+            <Button basic color='red' inverted onClick={() => setIsDeleteMode(false)}>
+              <Icon name='remove' /> No
+            </Button>
+            <Button color='green' inverted onClick={handleDeleteClick}>
+              <Icon name='checkmark' /> Yes
+            </Button>
+          </Modal.Actions>
+        </Modal>
+    </>
   )
 };
 
