@@ -27,18 +27,21 @@ const SelectCategory = ({ categories, handleChange, handleAddCategory, categoryI
   };
 
   return (
-    <Dropdown
-      selection
-      fluid
-      search
-      allowAdditions
-      options={categoryOptions}
-      placeholder='Filter/Add Category'
-      style={inputStyle}
-      onChange={handleChange}
-      onAddItem={handleAddItem}
-      value={selectedCategory}
-    />  
+    <>
+      <Dropdown
+        selection
+        fluid
+        search
+        allowAdditions
+        options={categoryOptions}
+        placeholder='Filter/Add Category'
+        style={inputStyle}
+        onChange={handleChange}
+        onAddItem={handleAddItem}
+        value={selectedCategory}
+      />
+      <p style={{display: 'block', minHeight: 'auto', background: 'none', fontSize: 14, color: 'whitesmoke', marginTop: 15, marginBottom: 0, paddingLeft: 5}}>Click to select a category. Type to filter or add a new category</p>
+    </>  
   )
 };
 
