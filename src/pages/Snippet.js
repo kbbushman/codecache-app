@@ -157,7 +157,7 @@ const Snippet = ({ match, history }) => {
       .then((res) => {
         // setIsLoading(false);
         setIsDeleteMode(false);
-        setTimeout(() => history.push('/dashboard'), 1000);
+        setTimeout(() => history.push('/dashboard'), 200);
       })
       .catch((err) => {
         setErrors({messageList: [err.toString() || 'Sometthing went wrong. Please verify your internet connenction and try again']});
