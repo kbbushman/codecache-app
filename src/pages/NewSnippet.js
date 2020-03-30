@@ -34,7 +34,7 @@ const NewSnippet = ({ history }) => {
   });
 
   useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
     fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
       method: 'GET',
       headers: {
@@ -44,7 +44,7 @@ const NewSnippet = ({ history }) => {
       .then((stream) => stream.json())
       .then((res) => {
         if (res.status === 200) {
-          setIsLoading(false);
+          // setIsLoading(false);
           setCategories(res.categories);
         }
       })
