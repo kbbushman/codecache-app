@@ -23,7 +23,7 @@ const DashBoard = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    // setIsLoading(true);
+    setIsLoading(true);
     fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -31,7 +31,7 @@ const DashBoard = () => {
     })
       .then((stream) => stream.json())
       .then((res) => {
-        // setIsLoading(false);
+        setIsLoading(false);
         setFetchedCategories(res.categories);
         setCategories(res.categories);
       })
