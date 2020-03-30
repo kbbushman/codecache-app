@@ -31,11 +31,13 @@ const DashBoard = () => {
     })
       .then((stream) => stream.json())
       .then((res) => {
+        console.log(res)
         setIsLoading(false);
         setFetchedCategories(res.categories);
         setCategories(res.categories);
       })
       .catch((err) => {
+        console.log(err)
         setErrors({messageList: ['Please verify your internet connenction and try again']});
       });
   }, []);
