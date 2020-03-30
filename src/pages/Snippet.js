@@ -208,7 +208,7 @@ const Snippet = ({ match, history }) => {
           setIsDeleteMode(false);
           setSnippetIsDeleted(true);
           setIsLoading(false);
-          setTimeout(() => history.push('/dashboard'), 1000);
+          history.push('/dashboard');
         } else {
           setIsLoading(false);
           setIsDeleteMode(false);

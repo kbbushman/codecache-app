@@ -86,7 +86,7 @@ const NewSnippet = ({ history }) => {
           if (res.status === 201) {
             setSnippet({...snippet, isSaved: true});
             setIsLoading(false);
-            setTimeout(() => history.push('/dashboard'), 1000);
+            history.push('/dashboard');
           } else {
             setIsLoading(false);
             setErrors({messageList: res.error.split(',')});
