@@ -127,7 +127,7 @@ const Snippet = ({ match, history }) => {
   };
 
   const handleAddCategory = (newCategory) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
       method: 'POST',
       headers: {
@@ -139,7 +139,7 @@ const Snippet = ({ match, history }) => {
       .then((stream) => stream.json())
       .then((res) => {
         if (res.status === 201) {
-          setIsLoading(false);
+          // setIsLoading(false);
           setCategories([...categories, res.category]);
           setSnippet({...snippet, category: res.category._id});
         } else {
@@ -167,7 +167,7 @@ const Snippet = ({ match, history }) => {
     setErrors(errors);
     
     if (formIsValid) {
-      setIsLoading(true);
+      // setIsLoading(true);
       setIsReadOnly(!isReadOnly);
       fetch(`${process.env.REACT_APP_BASE_URL}/snippets/${snippet.slug}`, {
         method: 'PUT',
@@ -180,10 +180,10 @@ const Snippet = ({ match, history }) => {
         .then((stream) => stream.json())
         .then((res) => {
           if (res.status === 200) {
-            setIsLoading(false);
+            // setIsLoading(false);
             setSnippet(res.snippet);
           } else {
-            setIsLoading(false);
+            // setIsLoading(false);
             setIsReadOnly(false);
             setErrors({messageList: res.error.split(',')});
           }

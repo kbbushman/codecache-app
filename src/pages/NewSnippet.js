@@ -34,7 +34,7 @@ const NewSnippet = ({ history }) => {
   });
 
   useEffect(() => {
-    // setIsLoading(true);
+    setIsLoading(true);
     fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
       method: 'GET',
       headers: {
@@ -44,7 +44,7 @@ const NewSnippet = ({ history }) => {
       .then((stream) => stream.json())
       .then((res) => {
         if (res.status === 200) {
-          // setIsLoading(false);
+          setIsLoading(false);
           setCategories(res.categories);
         }
       })
@@ -111,7 +111,7 @@ const NewSnippet = ({ history }) => {
   };
 
   const handleAddCategory = (newCategory) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
       method: 'POST',
       headers: {
@@ -123,7 +123,7 @@ const NewSnippet = ({ history }) => {
       .then((stream) => stream.json())
       .then((res) => {
         if (res.status === 201) {
-          setIsLoading(false);
+          // setIsLoading(false);
           setCategories([...categories, res.category]);
           setSnippet({...snippet, category: res.category._id});
         }
